@@ -1,0 +1,30 @@
+{
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "mysql2": "^3.14.1",
+    "nodemon": "^3.1.10",
+    "passport": "^0.7.0",
+    "sequelize": "^6.37.7"
+  },
+  "name": "usam-assesment-task",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MohammedKhalidMahmoud/USAM-assesment-task.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MohammedKhalidMahmoud/USAM-assesment-task/issues"
+  },
+  "homepage": "https://github.com/MohammedKhalidMahmoud/USAM-assesment-task#readme"
+}
