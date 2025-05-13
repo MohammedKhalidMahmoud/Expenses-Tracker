@@ -38,14 +38,18 @@ app.post('/api/auth/signup', (req, res) => {
     // console.log(req.body);
     const { name, email, password } = req.body;
     console.log(name, email, password);
-    // User.create({
-    //     name: name,
-    //     email: email,
-    //     password: password
-    // })
-    // .then(user => {
-    //     console.log("User created successfully:", user);
-    // })
+    const data = {
+        name: name,
+        email: email,
+        password: password
+    }
+    User.create(data)
+    .then(user => {
+        console.log("User created successfully:", user);
+    }).catch(error => {
+        console.error("Error creating user:", error);
+        res.status(500).json({ message: "Error creating user" });
+    });
 
     res.status(200).json({ message:"signed up successfully"});
     
