@@ -1,9 +1,9 @@
 const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config/db');
-const bcrypt = require('bcryptjs');
+const { sequelize } = require('./index');
+// const bcrypt = require('bcryptjs');
 
 const User = sequelize.define('User', {
-  username: {
+  name: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true
@@ -20,12 +20,15 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false
   }
-}, {
-  hooks: {
-    beforeCreate: async (user) => {
-      user.password = await bcrypt.hash(user.password, 10);
-    }
-  }
 });
 
 module.exports = User;
+
+
+// , {
+//   hooks: {
+//     beforeCreate: async (user) => {
+//       user.password = await bcrypt.hash(user.password, 10);
+//     }
+//   }
+// }
