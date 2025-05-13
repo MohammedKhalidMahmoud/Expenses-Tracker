@@ -1,12 +1,13 @@
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('./index');
+// const { DataTypes } = require('sequelize');
+import { DataTypes } from 'sequelize';
+import { sequelize } from './index.js';
+// const { sequelize } = require('./index.js');
 // const bcrypt = require('bcryptjs');
 
-const User = sequelize.define('User', {
+export const User = sequelize.define('User', {
   name: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true
   },
   email: {
     type: DataTypes.STRING,
@@ -20,9 +21,14 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false
   }
-});
+},{
+    freezeTableName: true,
+    timestamps: false,
+  }
+  
+);
 
-module.exports = User;
+
 
 
 // , {

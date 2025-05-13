@@ -1,7 +1,7 @@
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('./index');
+import { DataTypes } from 'sequelize';
+import { sequelize } from './index.js';
 
-const Expense = sequelize.define('Expense', {
+export const Expense = sequelize.define('Expense', {
   amount: {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false
@@ -17,6 +17,8 @@ const Expense = sequelize.define('Expense', {
   description: {
     type: DataTypes.TEXT
   }
+}, {
+  freezeTableName: true,
+  timestamps: false,
+  
 });
-
-module.exports = Expense;
