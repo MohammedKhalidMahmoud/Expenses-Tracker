@@ -1,7 +1,5 @@
 
 import { Sequelize } from 'sequelize';
-import dotenv from 'dotenv';
-dotenv.config();
 
 export const sequelize = new Sequelize('expenses_db', 'root', '', {
   host: 'localhost',
@@ -17,3 +15,14 @@ export async function try_connection(){
   }
 }
 
+export async function sync_tables(){
+  async () => {
+  try {
+   await User.sync({ force: true, alter:true });
+      await Expense.sync({ force: false, alter:true });
+    console.log('✅ Database synced successfully');
+  } catch (error) {
+    console.error('❌ Database sync failed:', error.message);
+  }
+  };
+}

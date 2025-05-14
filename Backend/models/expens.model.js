@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from './index.js';
 
-export const Expense = sequelize.define('Expense', {
+const Expense = sequelize.define('Expense', {
   amount: {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false
@@ -22,3 +22,5 @@ export const Expense = sequelize.define('Expense', {
   timestamps: false,
   
 });
+
+export default Expense;

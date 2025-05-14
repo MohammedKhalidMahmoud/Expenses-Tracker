@@ -4,7 +4,7 @@ import { sequelize } from './index.js';
 // const { sequelize } = require('./index.js');
 // const bcrypt = require('bcryptjs');
 
-export const User = sequelize.define('User', {
+const User = sequelize.define('User', {
   name: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -28,6 +28,7 @@ export const User = sequelize.define('User', {
   
 );
 
+export default User;
 
 
 
