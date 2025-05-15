@@ -1,5 +1,5 @@
 import * as UserValidator from '../Middlewares/UserValidator.js';
-import * as UserController from '../Controllers/user.controller.js';
+import * as UserController from '../Controllers/User.controller.js';
 import express from 'express';
 
 const router= express.Router();

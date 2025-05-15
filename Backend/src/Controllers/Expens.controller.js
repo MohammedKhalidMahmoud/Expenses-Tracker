@@ -45,11 +45,11 @@
 // }
 
 import jwt from "jsonwebtoken";
-import Expense from "../models/expens.model.js";
+import Expense from "../Models/Expens.model.js";
 
-export async function getAllExpenses(req, res) {
+export async function getExpensesById(req, res) {
   try {
-    const token = req.headers['authorization']?.split(' ')[1] || req.headers['token'];
+    const token = req.headers['token'];
     
     if (!token) {
       return res.status(401).json({ message: "Authentication token missing" });
@@ -57,11 +57,11 @@ export async function getAllExpenses(req, res) {
 
     // Verify token synchronously and get the decoded user
     const user = jwt.verify(token, process.env.JWT_SECRET);
-    
+    console.log(user);
     // If you need to use the user information for filtering expenses:
     // const expenses = await Expense.findAll({ where: { userId: user.id } });
     
-    const expenses = await Expense.findAll();
+    const expenses = await Expense.findAll({where: { userId: user.id }});
     
     console.log("Fetched all expenses successfully");
     res.status(200).json({ 
@@ -89,7 +89,6 @@ export async function getAllExpenses(req, res) {
 }
 
 
-
 // Helper function to verify token
 const verifyToken = (token) => {
   try {
@@ -103,30 +102,30 @@ const verifyToken = (token) => {
 
 
 // Get single expense by ID
-export const getExpenseById = async (req, res) => {
-  try {
-    const token = req.headers.authorization?.split(' ')[1] || req.headers.token;
-    if (!token) return res.status(401).json({ success: false, message: "Token missing" });
+// export const getExpenseById = async (req, res) => {
+//   try {
+//     const token = req.headers.authorization?.split(' ')[1] || req.headers.token;
+//     if (!token) return res.status(401).json({ success: false, message: "Token missing" });
 
-    const user = verifyToken(token);
-    const expense = await Expense.findOne({
-      where: { id: req.params.id, userId: user.id }
-    });
+//     const user = verifyToken(token);
+//     const expense = await Expense.findOne({
+//       where: { id: req.params.id, userId: user.id }
+//     });
 
-    if (!expense) {
-      return res.status(404).json({ success: false, message: "Expense not found" });
-    }
+//     if (!expense) {
+//       return res.status(404).json({ success: false, message: "Expense not found" });
+//     }
 
-    res.status(200).json({ success: true, data: expense });
-  } catch (error) {
-    handleErrorResponse(res, error);
-  }
-};
+//     res.status(200).json({ success: true, data: expense });
+//   } catch (error) {
+//     handleErrorResponse(res, error);
+//   }
+// };
 
 // Create new expense
 export const createExpense = async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1] || req.headers.token;
+    const token = req.headers.token;
     if (!token) return res.status(401).json({ success: false, message: "Token missing" });
 
     const user = verifyToken(token);
@@ -142,14 +141,16 @@ export const createExpense = async (req, res) => {
 };
 
 // Update expense
-export const updateExpense = async (req, res) => {
+export const updateExpens = async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1] || req.headers.token;
+    const token = req.headers.token;
     if (!token) return res.status(401).json({ success: false, message: "Token missing" });
 
     const user = verifyToken(token);
+    console.log(user.id);
+    console.log(+req.params.id);
     const [updated] = await Expense.update(req.body, {
-      where: { id: req.params.id, userId: user.id }
+      where: { id: +req.params.id, userId: user.id }
     });
 
     if (!updated) {
@@ -166,7 +167,7 @@ export const updateExpense = async (req, res) => {
 // Delete expense
 export const deleteExpense = async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1] || req.headers.token;
+    const token = req.headers.token;
     if (!token) return res.status(401).json({ success: false, message: "Token missing" });
 
     const user = verifyToken(token);
@@ -192,3 +193,29 @@ const handleErrorResponse = (res, error) => {
   }
   res.status(500).json({ success: false, message: "Server error", error: error.message });
 };
+
+export async function getDailyExpenses(req, res) {
+   try {
+        // const requestedDate = parseDateParam(req.query.date, new Date());
+        // const startOfDay = new Date(requestedDate);
+        const startOfDay = new Date();
+        startOfDay.setHours(0, 0, 0, 0);
+        
+        const endOfDay = new Date(startOfDay);
+        endOfDay.setDate(startOfDay.getDate() + 1);
+        
+        const expenses = await Expense.findAll({
+            date: {
+                $gte: startOfDay,
+                $lt: endOfDay
+            }
+        });
+        
+        res.json(expenses);
+    } catch (err) {
+        res.status(500).json({ 
+            error: 'Server error',
+            message: err.message 
+        });
+    }
+}

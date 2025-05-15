@@ -4,14 +4,13 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 
-export function generateToken(email) {
+export function generateToken(email, id) {
   return jwt.sign(
-    { email },
+    { email, id },
     process.env.JWT_SECRET,
     { expiresIn: '1h' } // Token expires in 1 hour
   );
 }
-
 
 export async function authenticateToken(token) {
   return new Promise((resolve, reject) => {

@@ -1,10 +1,16 @@
 // const { DataTypes } = require('sequelize');
 import { DataTypes } from 'sequelize';
-import { sequelize } from './index.js';
+import { sequelize } from './database.js';
 // const { sequelize } = require('./index.js');
 // const bcrypt = require('bcryptjs');
 
 const User = sequelize.define('User', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    allowNull: false,
+    autoIncrement: true
+  },
   name: {
     type: DataTypes.STRING,
     allowNull: false,

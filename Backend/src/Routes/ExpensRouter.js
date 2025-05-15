@@ -1,16 +1,21 @@
 import * as ExpensValidator from '../Middlewares/ExpensValidator.js';
-import * as ExpensController from '../Controllers/expens.controller.js';
+import * as ExpensController from '../Controllers/Expens.controller.js';
 import express from 'express';
 
 const router= express.Router();
 
 router.route('/api/expens')
-  .get(ExpensController.getAllExpenses);
-//   .post(ExpensValidator.validateExpense, ExpensController.createExpense)
-//   .put(ExpensController.updateAllExpenses)
+  .get(ExpensController.getExpensesById)
+  .post(ExpensValidator.validateExpense, ExpensController.createExpense);
+  // .put(ExpensValidator.validateExpense, ExpensController.updateExpens);
 //   .delete(ExpensController.deleteAllExpenses);
 
 
+router.route('/api/expens/:id')
+.put(ExpensValidator.validateExpense, ExpensController.updateExpens);
+
+router.route('/api/expens/daily')
+  .get(ExpensController.getDailyExpenses);
 
 export default router;
 

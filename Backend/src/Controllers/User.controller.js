@@ -1,17 +1,18 @@
-import User from '../models/user.model.js';
+import User from '../Models/User.model.js';
 import { generateToken } from '../Utils/JWT.js';
 
 
 export async function login(req, res){
-    const { email, password } = req.body;
+    const { email,  password } = req.body;
     const user= await User.findOne({ where: { email, password } });
+    console.log(user);
     if(!user){
         return res.status(401).json({ 
             error: 'Invalid credentials',
             message: 'Please check your email and password'
         });
     }    
-    let token=generateToken(email);
+    let token=generateToken(email, user.id);
     console.log("token: ",token);
     res.status(200).json({ message:"logged in successfully", token});
 }
