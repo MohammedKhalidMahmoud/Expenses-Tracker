@@ -13,6 +13,7 @@ export default function Dashboard() {
         const min = Math.min(...data.map(item => +item.amount));
         return { sum, avg, max, min };
     }
+    const [loading, setLoading]= useState(false);
     const [ApiResponse, setApiResponse]= useState([]);
     const [filteredData, setFilteredData]= useState([]);
     const [category, setCategory]= useState('');
@@ -46,7 +47,7 @@ export default function Dashboard() {
         console.log(filteredData);
         setFilteredData(filteredData);
         const fun_response=calculateStatistics(filteredData);
-        
+        setLoading(true);
         setStatistics(fun_response);
     }
   return (
@@ -60,7 +61,8 @@ export default function Dashboard() {
             <MagicalComponent value={statistics.max<0 ? 0 : statistics.max}>Max</MagicalComponent>
             <MagicalComponent value={statistics.min=== Infinity ? 0 : statistics.min}>Min</MagicalComponent>
         </div>
-        <Table data={filteredData } />
+        {loading? <Table data={filteredData } /> : <Table data={ApiResponse } />}
+        
     </>
     
   )
