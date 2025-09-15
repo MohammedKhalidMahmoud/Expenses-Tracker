@@ -2,8 +2,8 @@
 import express from 'express';         // Express framework for building the server
 import cors from 'cors';              // CORS middleware for cross-origin requests
 import dotenv from 'dotenv';          // Environment variables configuration
-import UserRouter from './Routes/UserRouter.js';    // Router for user-related endpoints
-import ExpensRouter from './Routes/ExpensRouter.js'; // Router for expense-related endpoints
+import UserRouter from './Routes/AuthRouter.js';    // Router for user-related endpoints
+import ExpensesRouter from './Routes/ExpensesRouter.js'; // Router for expense-related endpoints
 import * as database from './Models/database.js';    // Database configuration and utilities
 import { syncTables } from './Models/sync.js'; // Function to synchronize database tables
 // Load environment variables from .env file
@@ -20,8 +20,8 @@ app.use(cors());                      // Enable CORS for all routes
 app.use(express.json());              // Parse incoming JSON requests
 
 // Register route handlers
-app.use(UserRouter);                  // Mount user routes
-app.use(ExpensRouter);                // Mount expense routes
+app.use('/api/auth', UserRouter);                  // Mount user routes
+app.use('/api/expenses', ExpensesRouter);                // Mount expense routes
 
 // Synchronize database tables (create/modify tables as needed)
 database.tryConnection();

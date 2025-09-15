@@ -1,42 +1,62 @@
-import User from '../Models/User.model.js';
-import { generateToken } from '../Utils/JWT.js';
+import UserService from "../Services/User.service.js";
 
-
-export async function login(req, res){
-    const { email,  password } = req.body;
-    const user= await User.findOne({ where: { email, password } });
-    console.log(user);
-    if(!user){
-        return res.status(401).json({ 
-            error: 'Invalid credentials',
-            message: 'Please check your email and password'
+export async function getAllUsers(req, res){
+    try{
+        const users = await UserService.getAllUsers();
+        res.status(200).json({ 
+            success: true,
+            message: "Users retrieved successfully", 
+            data: users 
         });
-    }    
-    let token=generateToken(email, user.id);
-    console.log("token: ",token);
-    res.status(200).json({ message:"logged in successfully", token});
+    } catch (error) {
+        res.status(error.statusCode || 500).json({
+            success: false,
+            message: error.message || 'Error retrieving users'
+        });
+    }
 }
 
-export async function signup(req, res){
-    const { name, email, password } = req.body;
-    console.log(name, email, password);
-    if(await User.findOne({ where: { email } })){
-        return res.status(409).json({ 
-            error: 'Email already exists',
-            message: 'Please use a different email address'
+export async function getUserById(req, res){
+    const userId = req.params.id;
+    try{
+        const user = await UserService.getUserById(userId);
+        if(!user){
+            return res.status(404).json({ 
+                success: false,
+                message: "User not found" 
+            });
+        }
+        res.status(200).json({ 
+            success: true,
+            message: "User retrieved successfully", 
+            data: user 
+        });
+    } catch (error) {
+        res.status(error.statusCode || 500).json({
+            success: false,
+            message: error.message || 'Error retrieving user'
         });
     }
-    const new_user = {
-        name,
-        email,
-        password,
-    }
-    User.create(new_user)
-        .then(user => {
-            console.log("User created successfully:", user);
-            return res.status(200).json({ message:"signed up successfully"});
-        }).catch(error => {
-            console.error("Error creating user:", error);
-            return res.status(500).json({ message: "Error creating user" });
+}
+
+export async function deleteUserById(req, res){
+    const userId = req.params.id;
+    try{
+        const deleted = await UserService.deleteUserById(userId);
+        if(!deleted){
+            return res.status(404).json({ 
+                success: false,
+                message: "User not found or already deleted" 
+            });
+        }
+        res.status(200).json({ 
+            success: true,
+            message: "User deleted successfully" 
         });
+    } catch (error) {
+        res.status(error.statusCode || 500).json({
+            success: false,
+            message: error.message || 'Error deleting user'
+        });
+    }
 }

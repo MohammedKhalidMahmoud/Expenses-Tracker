@@ -13,3 +13,11 @@ export class AppError extends Error {
     }
   }
 }
+
+export const handleErrorResponse = (res, error) => {
+  console.error(error);
+  if (error.message.includes("token")) {
+    return res.status(401).json({ success: false, message: error.message });
+  }
+  res.status(500).json({ success: false, message: "Server error", error: error.message });
+};

@@ -1,51 +1,8 @@
-// export function check_required_fields(name, email, password)  {
-//     if(!name) return res.status(400).json({
-//         error: 'Name is required',
-//         message: 'Please provide a name'
-//     });
-//     if(!email) return res.status(400).json({
-//         error: 'email is required',
-//         message: 'Please provide a email'
-//     });
-//     if(!password) return res.status(400).json({
-//         error: 'password is required',
-//         message: 'Please provide a password'
-//     });
-// }
 
-//   .post(ExpensValidator.validateExpense, ExpensController.createExpense)
-//   .put(ExpensController.updateAllExpenses)
-//   .delete(ExpensController.deleteAllExpenses);
-// import { authenticateToken } from "../Utils/JWT.js";
-
-
-// import jwt from "jsonwebtoken";
-// import Expense from "../models/expens.model.js";
-// export async function getAllExpenses(req, res) {
-//   const token = req.headers['token'];
-//   console.log("HI");
-
-//     // authenticateToken(token);
-//     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-//           if (err) {
-//             console.error("Token verification failed:", err);
-//             return;
-//           }
-//   });
-
-//   Expense.findAll()
-//     .then(expenses => {
-//       console.log("Fetched all expenses successfully:", expenses);
-//       res.status(200).json({ message: "GET all expenses", data: expenses });
-//     })
-//     .catch(error => {
-//       console.error("Error fetching expenses:", error);
-//       res.status(500).json({ message: "Error fetching expenses" });
-//     });
-// }
-
-import jwt from "jsonwebtoken";
-import Expense from "../Models/Expens.model.js";
+import Expense from "../Models/Expense.model.js";
+import handleErrorResponse from "../Utils/AppError.js"
+import verifyToken from "../Utils/JWT.js"
+import * as ExpenseService from "../Services/Expense.service.js";
 
 export async function getExpensesById(req, res) {
   try {
@@ -56,7 +13,7 @@ export async function getExpensesById(req, res) {
     }
 
     // Verify token synchronously and get the decoded user
-    const user = jwt.verify(token, process.env.JWT_SECRET);
+    const user = verifyToken(token)
     console.log(user);
     // If you need to use the user information for filtering expenses:
     // const expenses = await Expense.findAll({ where: { userId: user.id } });
@@ -89,40 +46,6 @@ export async function getExpensesById(req, res) {
 }
 
 
-// Helper function to verify token
-const verifyToken = (token) => {
-  try {
-    return jwt.verify(token, process.env.JWT_SECRET);
-  } catch (error) {
-    throw new Error("Invalid or expired token");
-  }
-};
-
-// Get all expenses (with optional user filtering)
-
-
-// Get single expense by ID
-// export const getExpenseById = async (req, res) => {
-//   try {
-//     const token = req.headers.authorization?.split(' ')[1] || req.headers.token;
-//     if (!token) return res.status(401).json({ success: false, message: "Token missing" });
-
-//     const user = verifyToken(token);
-//     const expense = await Expense.findOne({
-//       where: { id: req.params.id, userId: user.id }
-//     });
-
-//     if (!expense) {
-//       return res.status(404).json({ success: false, message: "Expense not found" });
-//     }
-
-//     res.status(200).json({ success: true, data: expense });
-//   } catch (error) {
-//     handleErrorResponse(res, error);
-//   }
-// };
-
-// Create new expense
 export const createExpense = async (req, res) => {
   try {
     const token = req.headers.token;
@@ -141,14 +64,14 @@ export const createExpense = async (req, res) => {
 };
 
 // Update expense
-export const updateExpens = async (req, res) => {
+export const updateExpense = async (req, res) => {
   try {
     const token = req.headers.token;
     if (!token) return res.status(401).json({ success: false, message: "Token missing" });
 
     const user = verifyToken(token);
-    console.log(user.id);
-    console.log(+req.params.id);
+    // console.log(user.id);
+    // console.log(+req.params.id);
     const [updated] = await Expense.update(req.body, {
       where: { id: +req.params.id, userId: user.id }
     });
@@ -171,9 +94,7 @@ export const deleteExpense = async (req, res) => {
     if (!token) return res.status(401).json({ success: false, message: "Token missing" });
 
     const user = verifyToken(token);
-    const deleted = await Expense.destroy({
-      where: { id: req.params.id, userId: user.id }
-    });
+    const deleted = await ExpenseService.deleteExpenseById(req.params.id, user.id);
 
     if (!deleted) {
       return res.status(404).json({ success: false, message: "Expense not found or not owned by user" });
@@ -186,13 +107,7 @@ export const deleteExpense = async (req, res) => {
 };
 
 // Error handler utility
-const handleErrorResponse = (res, error) => {
-  console.error(error);
-  if (error.message.includes("token")) {
-    return res.status(401).json({ success: false, message: error.message });
-  }
-  res.status(500).json({ success: false, message: "Server error", error: error.message });
-};
+
 
 export async function getDailyExpenses(req, res) {
    try {

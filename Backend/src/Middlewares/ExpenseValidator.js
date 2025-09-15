@@ -62,19 +62,19 @@ export const validateExpense = [
   // Validate date field
   body('date')
     .notEmpty()
-    .withMessage('Date is required'),
-    // .isISO8601()
-    // .withMessage('Date must be in valid ISO8601 format (YYYY-MM-DD)'),
+    .withMessage('Date is required')
+    .isISO8601()
+    .withMessage('Date must be in valid ISO8601 format (YYYY-MM-DD)'),
 
   // Validate description field
   body('description')
     .notEmpty()
     .withMessage('Description is required')
     .isString()
-    .withMessage('Description must be a string'),
-    // .trim()
-    // .isLength({ max: 255 })
-    // .withMessage('Description cannot exceed 255 characters'),
+    .withMessage('Description must be a string')
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage('Description cannot exceed 255 characters'),
 
   // Process validation results
   handleValidationErrors,
