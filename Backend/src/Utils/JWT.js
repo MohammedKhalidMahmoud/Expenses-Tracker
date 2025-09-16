@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 
+// utility function to generate tokens
 export function generateToken(email, id) {
   return jwt.sign(
     { email, id },
@@ -12,20 +13,8 @@ export function generateToken(email, id) {
   );
 }
 
-export async function authenticateToken(token) {
-  return new Promise((resolve, reject) => {
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-      if (err) {
-        console.error("Token verification failed:", err);
-        reject(err);
-      } else {
-        resolve(user);
-      }
-    });
-  });
-}
 
-// Helper function to verify token
+// utility function to verify tokens
 export const verifyToken = (token) => {
   try {
     return jwt.verify(token, process.env.JWT_SECRET);

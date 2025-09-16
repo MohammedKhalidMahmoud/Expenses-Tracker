@@ -1,7 +1,6 @@
 
 import Expense from "../Models/Expense.model.js";
-import handleErrorResponse from "../Utils/AppError.js"
-import verifyToken from "../Utils/JWT.js"
+import {verifyToken} from "../Utils/JWT.js"
 import * as ExpenseService from "../Services/Expense.service.js";
 
 export async function getExpensesById(req, res) {
@@ -59,7 +58,8 @@ export const createExpense = async (req, res) => {
 
     res.status(201).json({ success: true, data: newExpense });
   } catch (error) {
-    handleErrorResponse(res, error);
+    const err= new AppError(error.message || 'Error creating expense', error.statusCode, error.status);
+    throw err;
   }
 };
 
@@ -83,7 +83,8 @@ export const updateExpense = async (req, res) => {
     const updatedExpense = await Expense.findByPk(req.params.id);
     res.status(200).json({ success: true, data: updatedExpense });
   } catch (error) {
-    handleErrorResponse(res, error);
+    const err= new AppError(error.message || 'Error updating Expense', error.statusCode, error.status);
+    throw err;
   }
 };
 
@@ -102,7 +103,8 @@ export const deleteExpense = async (req, res) => {
 
     res.status(200).json({ success: true, message: "Expense deleted successfully" });
   } catch (error) {
-    handleErrorResponse(res, error);
+    const err= new AppError(error.message || 'Error deleting expense', error.statusCode, error.status);
+    throw err;
   }
 };
 
@@ -128,9 +130,7 @@ export async function getDailyExpenses(req, res) {
         
         res.json(expenses);
     } catch (err) {
-        res.status(500).json({ 
-            error: 'Server error',
-            message: err.message 
-        });
+        const error = new AppError(err.message || 'Server error', err.statusCode, err.status);
+        throw error;
     }
 }

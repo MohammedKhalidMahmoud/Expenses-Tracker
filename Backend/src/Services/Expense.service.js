@@ -1,4 +1,4 @@
-import { getExpensesById } from "../Controllers/Expense.controller";
+
 import Expense from "../Models/Expense.model.js";
 
 export async function deleteExpenseById(id){

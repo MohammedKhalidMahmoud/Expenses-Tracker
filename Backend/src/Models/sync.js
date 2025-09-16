@@ -1,5 +1,5 @@
 import User from './User.model.js';
-import Expens from './Expens.model.js';
+import Expens from './Expense.model.js';
 
 export async function syncTables(){
  

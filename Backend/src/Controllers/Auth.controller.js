@@ -1,4 +1,4 @@
-import User from '../Models/User.model.js';
+
 import { generateToken } from '../Utils/JWT.js';
 import * as userService from "../Services/User.service.js";
 

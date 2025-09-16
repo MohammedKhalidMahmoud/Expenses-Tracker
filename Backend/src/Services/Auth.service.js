@@ -15,9 +15,6 @@ export function signup(name, email, password) {
     return newUser;
 }
 
-export function logout(){
-
-}
 
 export function resetPassword(){
     
