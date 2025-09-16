@@ -26,10 +26,14 @@ const User = sequelize.define('User', {
   password: {
     type: DataTypes.STRING,
     allowNull: false
+  },
+  isActive: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
   }
 },{
     freezeTableName: true,
-    timestamps: false,
+    timestamps: true,
   }
   
 );
