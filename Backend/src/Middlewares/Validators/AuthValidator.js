@@ -62,3 +62,22 @@ export const validateLogin = [
   handleValidationErrors,
 ];
 
+export const validateResetPassword = [
+  // Validate newPassword field
+  body('newPassword')
+    .notEmpty()
+    .withMessage('New password is required'),
+  // Validate confirmPassword field
+  body('confirmPassword')
+    .notEmpty()
+    .withMessage('Confirm password is required')
+    .custom((value, { req }) => {
+      if (value !== req.body.newPassword) {
+        throw new Error('Passwords do not match');
+      }
+      return true;
+    }),
+
+  // Handle validation results
+  handleValidationErrors,
+];

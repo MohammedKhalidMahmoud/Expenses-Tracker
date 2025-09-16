@@ -1,13 +1,13 @@
-import * as UserValidator from '../Middlewares/Validators/AuthValidator.js';
-import * as UserController from '../Controllers/User.controller.js';
+import * as AuthValidator from '../Middlewares/Validators/AuthValidator.js';
+import * as AuthController from '../Controllers/Auth.controller.js';
 import authMiddleware  from '../Middlewares/auth.js';
 import express from 'express';
 
 const router= express.Router();
 
-router.post('/login', UserValidator.validateLogin, UserController.login);
-router.post('/signup', UserValidator.validateSignup, UserController.signup);
-router.post('/resetpassword', authMiddleware, UserController.resetPassword);
+router.post('/login', AuthValidator.validateLogin, AuthController.login);
+router.post('/signup', AuthValidator.validateSignup, AuthController.signup);
+router.post('/resetpassword', authMiddleware, AuthValidator.validateResetPassword, AuthController.resetPassword);
 
 
 export default router;

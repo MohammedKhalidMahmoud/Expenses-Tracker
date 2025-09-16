@@ -44,37 +44,18 @@ const handleValidationErrors = (req, res, next) => {
  * - date: Must be non-empty (consider adding .isISO8601() for date format validation)
  * - description: Must be non-empty
  */
-export const validateExpense = [
+export const validateCreation = [
   // Validate amount field
-  body('amount')   
-    .notEmpty()
-    .withMessage('Amount is required')  
-    .isNumeric()
-    .withMessage('Amount must be a numeric value'),
+  
 
-  // Validate category field
-  body('category')
-    .notEmpty()
-    .withMessage('Category is required')
-    .isString()
-    .withMessage('Category must be a string'),
+  // Process validation results
+  handleValidationErrors,
+];
 
-  // Validate date field
-  body('date')
-    .notEmpty()
-    .withMessage('Date is required')
-    .isISO8601()
-    .withMessage('Date must be in valid ISO8601 format (YYYY-MM-DD)'),
+export const validateModification = [
+  // Validate amount field
+  
 
-  // Validate description field
-  body('description')
-    .notEmpty()
-    .withMessage('Description is required')
-    .isString()
-    .withMessage('Description must be a string')
-    .trim()
-    .isLength({ max: 255 })
-    .withMessage('Description cannot exceed 255 characters'),
 
   // Process validation results
   handleValidationErrors,

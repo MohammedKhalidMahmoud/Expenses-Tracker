@@ -13,7 +13,7 @@ dotenv.config();
 export const app = express();
 
 // Get port from environment variables (default to 3000 if not specified)
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 
 // Apply middleware
 app.use(cors());                      // Enable CORS for all routes
