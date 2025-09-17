@@ -55,8 +55,61 @@ const router= express.Router();
  *                     type: string
  *                     example: 10-10-2010
  */
-
 router.post('/login', AuthValidator.validateLogin, AuthController.login);
+
+/**
+ * @swagger
+ * /api/v1/auth/signup:
+ *   post:
+ *     summary: registers a new user
+ *     description: registeringa new user 
+ *     tags:
+ *       - Authentication
+ *     requestBody:
+ *      required: true
+ *      content:
+ *       application/json:
+ *      schema:
+ *        type: object
+ *        properties:
+ *        name:
+ *          type: string
+ *          example: Mohamed Khaled
+ *        email:
+ *          type: string
+ *          example: test@gmail.com
+ *        password:
+ *          type: string
+ *          example: test@123
+ *        rePassword:
+ *          type: string
+ *          example: test@123
+ *     responses:
+ *       200:
+ *         description: Successful signup
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   name:
+ *                     type: string
+ *                     example: John Doe
+ *                   email:
+ *                     type: string
+ *                     example: mkhaled@gmail.com
+ *                   createdAt:
+ *                     type: string
+ *                     example: 10-10-2010
+ *                   updatedAt:
+ *                     type: string
+ *                     example: 10-10-2010
+ */
 router.post('/signup', AuthValidator.validateSignup, AuthController.signup);
 router.post('/resetpassword', authMiddleware, AuthValidator.validateResetPassword, AuthController.resetPassword);
 
