@@ -63,6 +63,10 @@ export const validateLogin = [
 ];
 
 export const validateResetPassword = [
+  // Validate oldPassword field
+  body('oldPassword')
+    .notEmpty()
+    .withMessage('Old password is required'),
   // Validate newPassword field
   body('newPassword')
     .notEmpty()

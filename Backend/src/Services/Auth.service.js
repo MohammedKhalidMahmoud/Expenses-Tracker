@@ -1,21 +1,47 @@
 import User from "../Models/User.model.js";
+import { AppError } from '../Utils/AppError.js';
+import bcrypt  from 'bcrypt';
 
-export function login(email, password) {
-    return User.findOne({ where: { email, password } });
+export async function findUserByCredentials(email, password) {
+    const user=await User.findOne({ where: { email }, attributes:['name', 'email', 'password', 'isActive', 'createdAt', 'updatedAt'] });
+    if(!user) return null;
+        
+    const isMatch= await bcrypt.compare(password, user.password)
+    if(!isMatch) return null;
+
+    return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        isActive: user.isActive,
+        role: user.role,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
+    };
 }
 
-export function signup(name, email, password) {
-    const user = User.findOne({ where: { email } });
-    if (user) {
-        const error = new Error('Email already exists');
-        error.status = 409; // Conflict
-        throw error;
+export async function createUser(name, email, password, rePassword) {
+    if(password !== rePassword){
+        throw new AppError('Passwords do not match', 400, 'Bad Request');
     }
-    const newUser = User.create({ name, email, password });
-    return newUser;
+    const user = await User.findOne({ where: { email } });
+    if (user) {
+        throw new AppError('Email already exists', 409, 'Conflict');
+    }
+    const hashedPassword = bcrypt.hashSync(password, 10);
+    const newUser = await User.create({ name, email, password:hashedPassword });
+    return {
+        id: newUser.id,
+        name: newUser.name,
+        email: newUser.email,
+        isActive: newUser.isActive,
+        role: newUser.role,
+        createdAt: newUser.createdAt,
+        updatedAt: newUser.updatedAt
+    };
 }
 
 
-export function resetPassword(){
+// export function resetPassword(oldPassword, newPassword, rePassword){
     
-}
+// }

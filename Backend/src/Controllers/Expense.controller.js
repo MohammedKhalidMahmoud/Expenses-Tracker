@@ -3,6 +3,17 @@ import Expense from "../Models/Expense.model.js";
 import {verifyToken} from "../Utils/JWT.js"
 import * as ExpenseService from "../Services/Expense.service.js";
 
+
+export async function getExpenses(req, res, page=1, offset=10) { //paginated version
+  try{
+    const expenses=await ExpenseService.getExpenses({page, offset});
+    res.status(200).json({ message:"fetched expenses successfully", data:expenses });
+  }
+  catch(error){
+    throw new AppError(error.message || 'Error fetching expenses', error.statusCode, error.status);
+  }
+}
+
 export async function getExpensesById(req, res) {
   try {
     const token = req.headers['token'];

@@ -5,9 +5,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // utility function to generate tokens
-export function generateToken(email, id) {
+export function generateToken(id, role, email) {
   return jwt.sign(
-    { email, id },
+    { id, role, email },
     process.env.JWT_SECRET,
     { expiresIn: '1h' } // Token expires in 1 hour
   );

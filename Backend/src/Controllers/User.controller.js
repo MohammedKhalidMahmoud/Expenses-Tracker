@@ -10,8 +10,7 @@ export async function getUsers(req, res){
             data: users 
         });
     } catch (error) {
-        const err= new AppError(error.message || 'Error retrieving users', error.statusCode, error.status);
-        throw err;
+        throw new AppError(error.message || 'Error retrieving users', error.statusCode, error.status);
     }
 }
 
@@ -31,8 +30,7 @@ export async function getUserById(req, res){
             data: user 
         });
     } catch (error) {
-        const err= new AppError(error.message || 'Error retrieving user', error.statusCode, error.status);
-        throw err;
+        throw new AppError(error.message || 'Error retrieving user', error.statusCode, error.status);
     }
 }
 
@@ -51,25 +49,11 @@ export async function deleteUserById(req, res){
             message: "User deleted successfully" 
         });
     } catch (error) {
-        const err= new AppError(error.message || 'Error deleting user', error.statusCode, error.status);
-        throw err;
+        throw new AppError(error.message || 'Error deleting user', error.statusCode, error.status);
 }
 }
 
-export async function createUser(req, res){
-    const userData = req.body;
-    try{
-        const newUser = await UserService.createUser(userData);
-        res.status(201).json({ 
-            success: true,
-            message: "User created successfully", 
-            data: newUser 
-        });
-    } catch (error) {
-        const err= new AppError(error.message || 'Error creating user', error.statusCode, error.status);
-        throw err;
-    }
-}
+
 
 export async function updateUser(req, res){
     const userId = req.params.id;
@@ -87,8 +71,7 @@ export async function updateUser(req, res){
             message: "User updated successfully"
         });
     } catch (error) {
-       const err= new AppError(error.message || 'Error updating user', error.statusCode, error.status);
-       throw err;
+       throw new AppError(error.message || 'Error updating user', error.statusCode, error.status);
     }
 }
 
@@ -107,7 +90,6 @@ export async function deactivateUser(req, res){
             message: "User deactivated successfully"
         });
     } catch (error) {
-        const err= new AppError(error.message || 'Error deactivating user', error.statusCode, error.status);
-       throw err;
+        throw new AppError(error.message || 'Error deactivating user', error.statusCode, error.status);
     }
 }

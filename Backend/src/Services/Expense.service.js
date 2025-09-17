@@ -9,8 +9,12 @@ export async function getExpensesById(userId){
     return Expense.findAll({where: { userId }});
 }
 
-export async function getAllExpense(){
-    return await Expense.findAll();
+export async function getExpenses({ page = 1, limit = 10 }) {    // paginated version
+  if (limit === 0) {
+    return Expense.findAndCountAll(); // fetch all
+  }
+  const offset = (page - 1) * limit;
+  return Expense.findAndCountAll({ limit, offset});
 }
 
 export async function createExpense(expenseData){
