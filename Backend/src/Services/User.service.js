@@ -1,37 +1,46 @@
 import User from '../Models/User.model.js';
 
-export async function getUsers({ page = 1, limit = 10 }) {    // paginated version
+export async function getUsers( page = 1, limit = 10 ) {    // paginated version
   if (limit === 0) {
-    return User.findAndCountAll({attributes:['id','name','email','isActive','role','createdAt', 'updatedAt']}); // fetch all
+    return await User.findAndCountAll({attributes:['id','name','email','isActive','role','createdAt', 'updatedAt']}); // fetch all
   }
 
   const offset = (page - 1) * limit;
-  return User.findAndCountAll({ limit, offset,
+  return await User.findAndCountAll({ limit, offset,
      attributes:['id','name','email','isActive','role','createdAt','updatedAt'] });
 }
 
-export function getUserById(id) {
-    return User.findByPk(id,{
+export async function getUserById(id) {
+    return await User.findByPk(id,{
         attributes:['id','name','email','isActive','role','createdAt','updatedAt']
     });
 }
 
+export async function deleteUserById(id) {
+    const user = await getUserById(id);
+    if(!user) return null;
 
-export function deleteUserById(id) {
-    return User.destroy({ where: { id }, attributes:['id','name','email','isActive','role','createdAt','updatedAt'] });
+    await User.destroy({ where: { id }});
+    return user;
 }
 
-export function modifyUser(id, updateData) {
-    return User.update(updateData, { where: { id }, 
-        attributes:['id','name','email','isActive','role','createdAt','updatedAt'] });
+export async function modifyUser(id, updateData) {
+    const user = await getUserById(id);
+    if(!user) return null;
+    await User.update(updateData, { where: { id } });
+    return user;
 }
 
-export function deactivateUser(id) {
-    return User.update({ isActive: false }, { where: { id }, 
-        attributes:['id','name','email','isActive','role','createdAt','updatedAt'] });
+export async function deactivateUser(id) {
+    const user = await getUserById(id);
+    if(!user) return null;
+    await User.update({ isActive: false }, { where: { id } });
+    return user;
 }
 
-export function updatePassword(id, newPassword) {
-    return User.update({ password: newPassword }, { where: { id }, 
-        attributes:['id','name','email','isActive','role','createdAt','updatedAt'] });
+export async function updatePassword(id, newPassword) {
+    const user = await getUserById(id);
+    if(!user) return null;
+    await User.update({ password: newPassword }, { where: { id } });
+    return user;
 }

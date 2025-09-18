@@ -2,30 +2,27 @@
 import { generateToken } from '../Utils/JWT.js';
 import * as AuthService from "../Services/Auth.service.js";
 import { AppError } from '../Utils/AppError.js';
+import {successResponse, errorResponse} from './../Utils/resposne.js';
 
 export async function login(req, res){
     const { email,  password } = req.body;
     const user = await AuthService.findUserByCredentials(email,password);
     // console.log(user);
     if(!user){
-        const err= new AppError('Please check your email and password', 401, 'Invalid credentials');
-        throw err;
+        errorResponse(res, "Invalid email or password", 401, "can not find the user with given credentials");
     }    
-    let token=generateToken(user.id, email);
-    // console.log("token: ",token);
-    res.status(200).json({ message:"logged in successfully", data:{ token, user } });
+    let token=generateToken(user.id, user.role, email);
+    return successResponse(res, "logged in successfully", { token, user }, 200);
 }
 
 export async function signup(req, res){
-    const { name, email, password, role } = req.body;
-    // console.log(name, email, password);
+    const { name, email, password, rePassword, role, isActive } = req.body;
     try{
-        const new_user=await AuthService.createUser(name, email, password, role);
-        return res.status(201).json({ message:"User careted successfully", data: new_user});
+        const new_user=await AuthService.createUser(name, email, password, rePassword, role, isActive);
+        return successResponse(res, "User created successfully",  new_user, 200);
     }
     catch(error){
-        const err= new AppError('Email already exists', 409, 'Conflict');
-        throw err;
+            return errorResponse(res, error.message, error.statusCode, error.status);
         }
     }
 

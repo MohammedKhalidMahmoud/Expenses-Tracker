@@ -110,6 +110,13 @@ router.route('/:id')
  *               email:
  *                 type: string
  *                 example: updated@email.com
+ *               isActive:
+ *                 type: boolean
+ *                 example: true
+ *               role: 
+ *                 type: string
+ *                 example: user
+ * 
  *     responses:
  *       200:
  *         description: User updated successfully
@@ -199,6 +206,6 @@ router.route('/:id')
  *       404:
  *         description: User not found
  */
-    // .patch('/deactivate', authMiddleware, UserController.deactivateUser)
+    router.patch('/:id/deactivate', authMiddleware, UserController.deactivateUser)
     // .patch('/activate', authMiddleware, requireAdminRole, UserController.deactivateUser);
 export default router;

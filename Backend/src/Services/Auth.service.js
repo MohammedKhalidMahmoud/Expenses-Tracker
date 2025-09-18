@@ -1,9 +1,10 @@
 import User from "../Models/User.model.js";
 import { AppError } from '../Utils/AppError.js';
 import bcrypt  from 'bcrypt';
+import { errorResponse } from "../Utils/resposne.js";
 
 export async function findUserByCredentials(email, password) {
-    const user=await User.findOne({ where: { email }, attributes:['name', 'email', 'password', 'isActive', 'createdAt', 'updatedAt'] });
+    const user=await User.findOne({ where: { email }, attributes:['id', 'name', 'email', 'password', 'isActive','role', 'createdAt', 'updatedAt'] });
     if(!user) return null;
         
     const isMatch= await bcrypt.compare(password, user.password)
@@ -20,8 +21,9 @@ export async function findUserByCredentials(email, password) {
     };
 }
 
-export async function createUser(name, email, password, rePassword) {
-    if(password !== rePassword){
+export async function createUser(name, email, password, rePassword, role, isActive) {
+    if(password!== rePassword){
+        console.log(password, rePassword);
         throw new AppError('Passwords do not match', 400, 'Bad Request');
     }
     const user = await User.findOne({ where: { email } });
@@ -29,7 +31,7 @@ export async function createUser(name, email, password, rePassword) {
         throw new AppError('Email already exists', 409, 'Conflict');
     }
     const hashedPassword = bcrypt.hashSync(password, 10);
-    const newUser = await User.create({ name, email, password:hashedPassword });
+    const newUser = await User.create({ name, email, password:hashedPassword, role, isActive});
     return {
         id: newUser.id,
         name: newUser.name,

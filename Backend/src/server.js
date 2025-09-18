@@ -4,7 +4,7 @@ import cors from 'cors';              // CORS middleware for cross-origin reques
 import dotenv from 'dotenv';          // Environment variables configuration
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-import {UserRouter, AuthRouter, ExpensesRouter} from './Routers/index.js'; // Importing route handlers
+import {UserRouter, AuthRouter, ExpensesRouter, CategoryRouter} from './Routers/index.js'; // Importing route handlers
 import * as database from './Models/database.js';    // Database configuration and utilities
 import { syncTables } from './Models/sync.js'; // Function to synchronize database tables
 import { globalErrorHandler } from './Middlewares/GlobalErrorHandler.js'; // Global error handling middleware
@@ -19,17 +19,31 @@ const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "My API",
+      title: "Expenses Tracker API",
       version: "1.0.0",
-      description: "API documentation using Swagger",
+      description: "API documentation for Expenses Tracker",
     },
     servers: [
       {
         url: "http://localhost:3000", // Change if needed
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT", // optional, for UI hint
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
   },
-  apis: ["./routers/*.js"], // path to your API docs
+  apis: ["./routers/*.js"], // adjust path to your route files
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
@@ -48,6 +62,7 @@ app.use(express.json());              // Parse incoming JSON requests
 app.use('/api/v1/auth', AuthRouter);                  // Mount user routes
 app.use('/api/v1/expenses', ExpensesRouter);                // Mount expense routes
 app.use('/api/v1/users', UserRouter);                // Mount user routes
+app.use('/api/v1/categories', CategoryRouter);                // Mount Category routes
 
 app.use(globalErrorHandler);
 // Synchronize database tables (create/modify tables as needed)

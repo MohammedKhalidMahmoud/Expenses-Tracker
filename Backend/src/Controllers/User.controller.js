@@ -1,16 +1,14 @@
-import * as UserService from "../Services/index.js";
+import * as UserService from "../Services/User.service.js";
 import { AppError } from "../Utils/AppError.js";
+import { errorResponse, successResponse } from "../Utils/resposne.js";
 
 export async function getUsers(req, res){
     try{
         const users = await UserService.getUsers();
-        res.status(200).json({ 
-            success: true,
-            message: "Users retrieved successfully", 
-            data: users 
-        });
+        return successResponse(res, "Users retrieved successfully", users, 200);
     } catch (error) {
-        throw new AppError(error.message || 'Error retrieving users', error.statusCode, error.status);
+        console.log(error);
+        return errorResponse(res, error.message || 'Error retrieving users', error.statusCode, error.status);
     }
 }
 
@@ -19,18 +17,11 @@ export async function getUserById(req, res){
     try{
         const user = await UserService.getUserById(userId);
         if(!user){
-            return res.status(404).json({ 
-                success: false,
-                message: "User not found" 
-            });
+            return errorResponse(res, "User not found", 404, "No user with the given ID");
         }
-        res.status(200).json({ 
-            success: true,
-            message: "User retrieved successfully", 
-            data: user 
-        });
+        return successResponse(res, "User retrieved successfully", user, 200)
     } catch (error) {
-        throw new AppError(error.message || 'Error retrieving user', error.statusCode, error.status);
+        return errorResponse(res, error.message || 'Error retrieving user', error.statusCode, error.status);
     }
 }
 
@@ -39,18 +30,13 @@ export async function deleteUserById(req, res){
     try{
         const deleted = await UserService.deleteUserById(userId);
         if(!deleted){
-            return res.status(404).json({ 
-                success: false,
-                message: "User not found or already deleted" 
-            });
+            return errorResponse(res, "User not found", 404, "No user with the given ID");
         }
-        res.status(200).json({ 
-            success: true,
-            message: "User deleted successfully" 
-        });
+        return successResponse(res, "User deleted successfully", deleted, 200)
     } catch (error) {
-        throw new AppError(error.message || 'Error deleting user', error.statusCode, error.status);
-}
+        // console.error(error);
+        return errorResponse(res, error.message || 'Error deleting user', error.statusCode, error.status);
+    }
 }
 
 
@@ -59,36 +45,27 @@ export async function updateUser(req, res){
     const userId = req.params.id;
     const updateData = req.body;
     try{
-        const [updated] = await UserService.modifyUser(userId, updateData);
-        if(!updated){
-            return res.status(404).json({
-                success: false,
-                message: "User not found or not updated"
-            });
+        const user = await UserService.getUserById(userId);
+        if(!user){
+            return errorResponse(res, "User not found", 404, "No user with the given ID");
         }
-        res.status(200).json({
-            success: true,
-            message: "User updated successfully"
-        });
+        await UserService.modifyUser(userId, updateData);
+        return successResponse(res, "User updated successfully", user, 200)
     } catch (error) {
-       throw new AppError(error.message || 'Error updating user', error.statusCode, error.status);
+       return errorResponse(res, error.message || 'Error updating user', error.statusCode, error.status);
     }
 }
+
+
 
 export async function deactivateUser(req, res){
     const userId = req.params.id;
     try{
         const updated = await UserService.deactivateUser(userId);
         if(!updated){
-            return res.status(404).json({
-                success: false,
-                message: "User not found or not deactivated"
-            });
+            return errorResponse(res, "User not found", 404, "No user with the given ID");
         }
-        res.status(200).json({
-            success: true,
-            message: "User deactivated successfully"
-        });
+        return successResponse(res, "User deactivated successfully", updated, 200);
     } catch (error) {
         throw new AppError(error.message || 'Error deactivating user', error.statusCode, error.status);
     }

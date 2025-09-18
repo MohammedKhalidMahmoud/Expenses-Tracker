@@ -7,7 +7,7 @@ import { requireAdminRole } from '../Middlewares/role.js';
 const router = express.Router();
 
 router.route('/')
-.get(authMiddleware, requireAdminRole, ExpenseController.getExpenses)  // Admin can get all expenses
+.get(authMiddleware, requireAdminRole, ExpenseController.getExpenses)   
 /**
  * @swagger
  * /api/v1/expenses:
