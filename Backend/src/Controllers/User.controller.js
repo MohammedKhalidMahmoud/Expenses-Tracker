@@ -70,3 +70,7 @@ export async function deactivateUser(req, res){
         throw new AppError(error.message || 'Error deactivating user', error.statusCode, error.status);
     }
 }
+
+export async function updateProfilePicture(req, res){
+    return successResponse(res, "Profile picture updated successfully", req.file, 200);
+}

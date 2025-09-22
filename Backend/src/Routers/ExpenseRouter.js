@@ -165,5 +165,5 @@ router.route('/daily')
  *                           example: 4.50
  */
   .get(authMiddleware, ExpenseController.getDailyExpenses);
-
+  
 export default router;

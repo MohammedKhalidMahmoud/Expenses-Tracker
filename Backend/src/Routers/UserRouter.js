@@ -4,7 +4,10 @@ import * as UserValidator from "../Middlewares/Validators/UserValidator.js";
 import * as UserController from "../Controllers/User.controller.js";
 import {authMiddleware} from '../Middlewares/auth.js';
 import { requireAdminRole } from '../Middlewares/role.js';
+import {upload } from '../Middlewares/multer.js';
 const router = express.Router();
+
+    router.post('/uploads', upload.single('image') ,UserController.updateProfilePicture);
 
 router.route('/')
 /**
