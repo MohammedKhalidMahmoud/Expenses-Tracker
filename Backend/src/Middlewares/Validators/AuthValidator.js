@@ -29,19 +29,19 @@ const handleValidationErrors = (req, res, next) => {
 
 export const validateSignup = [
   // Validate name field
-  body('name')
-    .notEmpty()
-    .withMessage('First name is required'),
+  // body('name')
+  //   .notEmpty()
+  //   .withMessage('First name is required'),
     
-  // Validate email field
-  body('email')
-    .isEmail()
-    .withMessage('Invalid email format'),
+  // // Validate email field
+  // body('email')
+  //   .isEmail()
+  //   .withMessage('Invalid email format'),
     
-  // Validate password field
-  body('password')
-    .notEmpty()
-    .withMessage('Password is required'),  // Fixed message (was "Last name is required")
+  // // Validate password field
+  // body('password')
+  //   .notEmpty()
+  //   .withMessage('Password is required'),  // Fixed message (was "Last name is required")
     
   // Handle validation results
   handleValidationErrors,

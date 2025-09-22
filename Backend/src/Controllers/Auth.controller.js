@@ -16,7 +16,8 @@ export async function login(req, res){
 }
 
 export async function signup(req, res){
-    const { name, email, password, rePassword, role, isActive } = req.body;
+    const { name, email, password, rePassword, role, isActive= true } = req.body;
+    // if(!isActive) isActive=true;
     try{
         const new_user=await AuthService.createUser(name, email, password, rePassword, role, isActive);
         return successResponse(res, "User created successfully",  new_user, 200);

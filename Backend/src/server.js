@@ -2,7 +2,7 @@
 import express from 'express';         // Express framework for building the server
 import cors from 'cors';              // CORS middleware for cross-origin requests
 import dotenv from 'dotenv';          // Environment variables configuration
-
+// import { bodyParser } from 'body-parser'; // Middleware to parse request bodies
 import * as database from './Models/database.js';    // Database configuration and utilities
 import { syncTables } from './Models/sync.js'; // Function to synchronize database tables
 import { globalErrorHandler } from './Middlewares/GlobalErrorHandler.js'; // Global error handling middleware
@@ -17,6 +17,9 @@ export const app = express();
 // Swagger configuration
 configureSwagger(app);
 
+app.use(cors());                      // Enable CORS for all routes
+app.use(express.json());              // Parse incoming JSON requests
+
 // Register route handlers
 registerRouteHandlers(app);
 
@@ -24,8 +27,7 @@ registerRouteHandlers(app);
 const port = process.env.PORT || 3000;
 
 // Apply middleware
-app.use(cors());                      // Enable CORS for all routes
-app.use(express.json());              // Parse incoming JSON requests
+
 app.use(globalErrorHandler);
 
 

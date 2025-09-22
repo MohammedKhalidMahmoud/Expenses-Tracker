@@ -1,6 +1,7 @@
 
 import { Op } from 'sequelize';
 import Category from '../Models/Category.model.js';
+import User from '../Models/User.model.js';
 
 
 export async function getCategoryById(categoryId, userId) {
@@ -31,6 +32,9 @@ export async function modifyCategory(categoryId, userId, updateData) {
 }
 
 export async function deleteCategory(categoryId, userId) {
+    const user = User.findByPk(userId);
+    if(Category.findByPk(categoryId).type==='global' && user.role !=='admin'){
+    }
     const category= getCategoryById(categoryId, userId);
     if(!category) return null;
     await Category.delete({ where: { id: categoryId } });
@@ -41,4 +45,8 @@ export async function createCategory(categoryId, userId, data) {
     if(!category) return null;
     await Category.craete(data, { where: { id: categoryId } });
     return category;
+}
+
+export async function getAllCategories(req, res) {
+    return await Category.findAll();
 }
