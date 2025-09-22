@@ -12,9 +12,9 @@ export function getCategoryById(req, res) {
     return successResponse(res, "Category retrieved successfully", category, 200);
 }
 
-export function getCategories(req,res){
+export async function getCategories(req,res){
     const userId = req.user.id;
-    const categories= CategoryService.getCategories(userId);
+    const categories= await CategoryService.getCategories(userId);
     if(categories) return successResponse(res, "Categories retrieved successfully", categories, 200);
     else return errorResponse(res, "No categories found", 404, "No categories found for this user");
 }
@@ -46,12 +46,11 @@ export function deleteCategory(req, res) {
 }
 
 export function createCategory(req, res) {
-    const { categoryId } = req.params;
     const userId = req.user.id;
     const data = req.body;
-    const postedCategory= CategoryService.createCategory(categoryId, userId, data);
+    const postedCategory= CategoryService.createCategory(userId, data);
     if(postedCategory){
-        return successResponse(res, "Category updated successfully", postedCategory, 200);
+        return successResponse(res, "Category creted successfully", postedCategory, 200);
     }
     else{
         return errorResponse(res, "Category not found", 404, "No category with the given ID for this user");
