@@ -1,0 +1,54 @@
+CategoryBase:
+  type: object
+  description: Base schema for category information.
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      description: The name of the category.
+      example: "Food"
+    description:
+      type: string
+      descripption: A brief description of the category.
+      example: "Expenses related to food and groceries"
+
+CategoryRequestBody:
+  $ref: "#/components/schemas/CategoryBase"
+
+CategoryResponsePayload:
+  allOf:
+    - $ref: "#/components/schemas/CategoryBase"
+    - type: object
+      required:
+        - id
+        - type
+        - userId
+        - createdAt
+        - updatedAt
+      description: Schema returned when fetching or creating a category.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the category.
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        type:
+          type: string
+          description: Indicates whether the category is global or user-specific.
+          enum: [ global, custom]
+          example: "global"
+        userId:
+          type: integer
+          description: ID of the user who owns this category (if user-specific).
+          example: 1
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the category was created.
+          example: "2023-10-01T12:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the category was last updated.
+          example: "2023-10-01T12:00:00Z"

@@ -1,0 +1,80 @@
+/api/v1/auth/signup:
+  post:
+    summary: Register a new user
+    description: Creates a new user account
+    tags:
+      - Auth
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SignupRequestBody"
+    responses:
+      "201":
+        description: User registered successfully
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/SuccessResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "#/components/schemas/UserResponsePayload"
+
+/api/v1/auth/login:
+  post:
+    summary: Login a user
+    description: Authenticate a user using email and password
+    tags:
+      - Auth
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/LoginRequestBody"
+    responses:
+      "200":
+        description: Successful login, returns user info and access token
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/SuccessResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "#/components/schemas/UserResponsePayload"
+
+
+/api/v1/auth/refresh-token:
+  post:
+    summary: Refresh authentication token
+    description: Exchanges a valid refresh token for new access token and refresh token.
+    tags:
+      - Auth
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/RefreshTokenRequestBody"
+    responses:
+      "200":
+        description: New access and refresh tokens generated successfully
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/SuccessResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "#/components/schemas/RefreshTokenResponsePayload"
+      "400":
+        description: Invalid or missing refresh token
+      "401":
+        description: Refresh token expired or unauthorized
+

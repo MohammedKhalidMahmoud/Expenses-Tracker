@@ -1,0 +1,98 @@
+ApiResponse:
+  type: object
+  description: Base API response structure for all endpoints.
+  required:
+    - success
+    - message
+    - data
+    - error
+  properties:
+    success:
+      type: boolean
+      description: Indicates if the request was successful.
+    message:
+      type: string
+      description: Descriptive message about the operation.
+    data:
+      nullable: true
+      description: Contains response payload on success.
+    error:
+      nullable: true
+      description: Contains error details when the request fails.
+
+SuccessResponse:
+  allOf:
+    - $ref: "#/components/schemas/ApiResponse"
+    - type: object
+      description: Standard response structure for successful operations.
+      properties:
+        success:
+          type: boolean
+          enum: [true]
+        message:
+          type: string
+          example: Operation successful
+        data:
+          nullable: false
+          description: Response payload for successful operations.
+          # 👇 This will be overridden in specific responses like LoginResponse
+        error:
+          type: "null"
+          example: null
+
+ErrorResponse:
+  allOf:
+    - $ref: "#/components/schemas/ApiResponse"
+    - type: object
+      description: Standard response structure for failed operations.
+      properties:
+        success:
+          type: boolean
+          enum: [false]
+        message:
+          type: string
+          example: Operation failed
+        data:
+          type: "null"
+          example: null
+        error:
+          nullable: false
+          allOf:
+            $ref: "#/components/schemas/ErrorObject"
+
+ErrorObject:
+  type: object
+  description: Detailed error information returned in failed responses.
+  required:
+    - code
+    - message
+  properties:
+    code:
+      type: integer
+      description: Error code representing the failure type.
+      example: 400
+    message:
+      type: string
+      description: Error message describing what went wrong.
+      example: Invalid credentials
+
+UserBase:
+  type: object
+  required:
+    - name
+    - email
+    - role
+    - isActive
+  properties:
+    name:
+      type: string
+      example: John Doe
+    email:
+      type: string
+      example: johndoe@email.com
+    role:
+      type: string
+      example: user
+    isActive:
+      type: boolean
+      example: true

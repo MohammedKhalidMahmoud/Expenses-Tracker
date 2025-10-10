@@ -1,20 +1,39 @@
 
-import Expense from "../Models/Expense.model.js";
-import {verifyToken} from "../Utils/JWT.js"
+// import Expense from "../Models/Expense.model.js";
+import { Expense, User } from "../Models/index.js"
+import { verifyToken } from "../Utils/JWT.util.js"
 import * as ExpenseService from "../Services/Expense.service.js";
+import { errorResponse, successResponse } from "../Utils/resposne.js";
+import { AppError } from "../Utils/AppError.js";
 
 
-export async function getExpenses(req, res, page=1, offset=10) { //paginated version
+export async function getAllExpenses(req, res){ // done
   try{
-    const expenses=await ExpenseService.getExpenses({page, offset});
-    res.status(200).json({ message:"fetched expenses successfully", data:expenses });
+    const expenses= await ExpenseService.getAllExpenses();
+    return successResponse(res, "Expenses retrieved successfully", expenses, 200)
   }
   catch(error){
-    throw new AppError(error.message || 'Error fetching expenses', error.statusCode, error.status);
+    return errorResponse(res, "error retreving expenses", 500, error.message);
+  } 
+}
+
+export async function getExpenses(req, res) { // retrieve the expenses associated with a certain user
+  const userId= req.user.id;
+  const user= User.findByPk(userId);
+  if(user.role=== 'admin') 
+    return errorResponse(res, "Error retrieving expenses" , 400, "admins do not have associated expenses")
+  // console.log(userId);
+  try{
+    const expenses= await ExpenseService.getExpenses(userId);
+    return successResponse(res, "Associated Expenses Retrieved successfully", expenses, 200);
+  }
+  catch(error){
+    return errorResponse(res, "Error Retrieving expenses", null,   )
+    // throw new AppError(error.message || 'Error fetching expenses', error.statusCode, error.status);
   }
 }
 
-export async function getExpensesById(req, res) {
+export async function getExpenseById(req, res) {
   try {
     const token = req.headers['token'];
     
@@ -31,27 +50,11 @@ export async function getExpensesById(req, res) {
     const expenses = await Expense.findAll({where: { userId: user.id }});
     
     console.log("Fetched all expenses successfully");
-    res.status(200).json({ 
-      success: true,
-      message: "Expenses retrieved successfully", 
-      data: expenses 
-    });
+    return successResponse(res, "Expenses retrieved successfully", expenses, 200)
     
   } catch (error) {
     console.error("Error in getAllExpenses:", error);
-    
-    if (error.name === 'JsonWebTokenError') {
-      return res.status(401).json({ 
-        success: false,
-        message: "Invalid or expired token" 
-      });
-    }
-    
-    res.status(500).json({ 
-      success: false,
-      message: "Failed to retrieve expenses",
-      error: error.message 
-    });
+    return errorResponse(res, "Failed to retrieve expenses", 500,error.message)
   }
 }
 
@@ -66,11 +69,9 @@ export const createExpense = async (req, res) => {
       ...req.body,
       userId: user.id // Associate expense with user
     });
-
-    res.status(201).json({ success: true, data: newExpense });
+    return successResponse(res, "Expense created successfully", newExpense, 201 )
   } catch (error) {
-    const err= new AppError(error.message || 'Error creating expense', error.statusCode, error.status);
-    throw err;
+    throw new AppError(error.message || 'Error creating expense', error.statusCode, error.status);
   }
 };
 
@@ -88,7 +89,7 @@ export const updateExpense = async (req, res) => {
     });
 
     if (!updated) {
-      return res.status(404).json({ success: false, message: "Expense not found or not owned by user" });
+      return errorResponse(res, "Expense not found or not owned by user", 404, error.message);
     }
 
     const updatedExpense = await Expense.findByPk(req.params.id);
@@ -102,17 +103,13 @@ export const updateExpense = async (req, res) => {
 // Delete expense
 export const deleteExpense = async (req, res) => {
   try {
-    const token = req.headers.token;
-    if (!token) return res.status(401).json({ success: false, message: "Token missing" });
-
     const user = verifyToken(token);
     const deleted = await ExpenseService.deleteExpenseById(req.params.id, user.id);
 
     if (!deleted) {
-      return res.status(404).json({ success: false, message: "Expense not found or not owned by user" });
+      return errorResponse(res, "Expense not found or not owned by user", 404, error.message);
     }
-
-    res.status(200).json({ success: true, message: "Expense deleted successfully" });
+    return successResponse(res, "Expense deleted successfully", deleted, 200);
   } catch (error) {
     const err= new AppError(error.message || 'Error deleting expense', error.statusCode, error.status);
     throw err;

@@ -29,7 +29,6 @@ const handleValidationErrors = (req, res, next) => {
     throw new AppError(
       'Validation error: One or more fields are incorrect',  // General error message
       400,                                                // HTTP Bad Request status
-      'VALIDATION_ERROR',                                 // Error type identifier
       validationErrors                                   // Array of field-specific errors
     );
   }

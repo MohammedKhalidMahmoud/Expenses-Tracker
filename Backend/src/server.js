@@ -7,7 +7,7 @@ import * as database from './Models/database.js';    // Database configuration a
 import { syncTables } from './Models/sync.js'; // Function to synchronize database tables
 import { globalErrorHandler } from './Middlewares/GlobalErrorHandler.js'; // Global error handling middleware
 import { registerRouteHandlers } from './Utils/RouteHandlers.js';
-import { configureSwagger } from './Utils/Swagger.js';
+import { configureSwagger } from './Swagger/swagger.config.js';
 // Load environment variables from .env file
 dotenv.config();
 
@@ -17,8 +17,10 @@ export const app = express();
 // Swagger configuration
 configureSwagger(app);
 
+// Apply middleware
 app.use(cors());                      // Enable CORS for all routes
 app.use(express.json());              // Parse incoming JSON requests
+
 
 // Register route handlers
 registerRouteHandlers(app);
@@ -26,9 +28,9 @@ registerRouteHandlers(app);
 // Get port from environment variables (default to 3000 if not specified)
 const port = process.env.PORT || 3000;
 
-// Apply middleware
 
 app.use(globalErrorHandler);
+
 
 
 // Synchronize database tables (create/modify tables as needed)

@@ -1,0 +1,49 @@
+
+ExpenseBase:
+  type: object
+  required: 
+    - amount
+    - categoryId
+  properties:
+    amount:
+      type: number
+      format: float
+      example: 150.75
+    description:
+      type: string
+      example: "Grocery shopping"
+    date:
+      type: string
+      format: date
+      example: "2023-10-01"
+    categoryId:
+      type: string
+      example: "550e8400-e29b-41d4-a716-446655440000"
+    
+ExpenseRequestBody:
+  $ref: '#/components/schemas/ExpenseBase'
+
+ExpenseResponsePayload:
+  allOf:
+    - $ref: '#/components/schemas/ExpenseBase'
+    - type: object
+      required:
+        - id
+        - userId
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        userId:
+          type: integer
+          example: 1
+        createdAt:
+          type: string
+          format: date-time
+          example: "2023-10-01T12:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2023-10-01T12:00:00Z"

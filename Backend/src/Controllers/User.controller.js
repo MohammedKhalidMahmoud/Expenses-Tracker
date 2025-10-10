@@ -3,13 +3,8 @@ import { AppError } from "../Utils/AppError.js";
 import { errorResponse, successResponse } from "../Utils/resposne.js";
 
 export async function getUsers(req, res){
-    try{
-        const users = await UserService.getUsers();
-        return successResponse(res, "Users retrieved successfully", users, 200);
-    } catch (error) {
-        console.log(error);
-        return errorResponse(res, error.message || 'Error retrieving users', error.statusCode, error.status);
-    }
+    const users = await UserService.getUsers();
+    return successResponse(res, "Users retrieved successfully", users, 200);
 }
 
 export async function getUserById(req, res){

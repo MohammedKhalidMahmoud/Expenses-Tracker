@@ -1,0 +1,162 @@
+/api/v1/users:
+  get:
+    summary: Retrieve all users (Admin only)
+    description: Get a list of all registered users.
+    tags:
+      - Users
+    security:
+      - bearerAuth: []
+    responses:
+      200:
+        description: List of users retrieved successfully
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/SuccessResponse"
+                - type: object
+                  properties:
+                    data:
+                      allOf:
+                        - $ref: "#/components/schemas/SuccessResponse"
+                        - type: object
+                          properties:
+                            data:
+                              $ref: "#/components/schemas/UserResponsePayload"
+      401:
+        description: Unauthorized
+      500:
+        description: Server error
+
+  post:
+    summary: Create a new user
+    description: Create a new user in the system.
+    tags:
+      - Users
+    security:
+      - bearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UserBase"
+    responses:
+      201:
+        description: User created successfully
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/SuccessResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "#/components/schemas/UserResponsePayload"
+      400:
+        description: Invalid input
+      401:
+        description: Unauthorized
+      500:
+        description: Server error
+
+/api/v1/users/{id}:
+  get:
+    summary: Get user by ID
+    tags:
+      - Users
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    responses:
+      200:
+        description: User details retrieved successfully
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/SuccessResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "#/components/schemas/UserResponsePayload"
+      404:
+        description: User not found
+      401:
+        description: Unauthorized
+
+  put:
+    summary: Update a user by ID
+    description: Update user details by providing the user ID.
+    tags:
+      - Users
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UserBase"
+    responses:
+      200:
+        description: User updated successfully
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/SuccessResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "#/components/schemas/UserResponsePayload"
+      400:
+        description: Invalid input
+      404:
+        description: User not found
+      401:
+        description: Unauthorized
+      500:
+        description: Server error
+
+  delete:
+    summary: Delete a user by ID
+    description: Permanently remove a user from the system.
+    tags:
+      - Users
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    responses:
+      200:
+        description: User deleted successfully
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/SuccessResponse"
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      example: {}
+      404:
+        description: User not found
+      401:
+        description: Unauthorized
+      500:
+        description: Server error

@@ -1,0 +1,108 @@
+SignupRequestBody:
+  type: object
+  required:
+    - name
+    - email
+    - password
+    - rePassword
+    - role
+  properties:
+    name:
+      type: string
+      example: John Doe
+    email:
+      type: string
+      format: email
+      example: johndoe@email.com
+    password:
+      type: string
+      format: password
+      example: Password123!
+    rePassword:
+      type: string
+      format: password
+      example: Password123!
+    role:
+      type: string
+      example: admin
+    isActive:
+      type: boolean
+      example: true
+
+LoginRequestBody:
+  type: object
+  required:
+    - email
+    - password
+  properties:
+    email:
+      type: string
+      example: test@gmail.com
+    password:
+      type: string
+      example: test123
+
+RefreshTokenRequestBody:
+  type: object
+  required:
+    - refreshToken
+  properties:
+    refreshToken:
+      type: string
+      description: The valid refresh token used to request a new access token.
+      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+
+LoginResponsePayload:
+  type: object
+  required:
+    - accessToken
+    - refreshToken
+    - user
+  properties:
+    accessToken:
+      type: string
+      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+    refreshToken:
+      type: string
+      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+    user:
+      $ref: "#/components/schemas/userBase"
+
+SignupResponsePayload:
+  type: object
+  required:
+    - id
+    - name
+    - email
+    - role
+  properties:
+    id:
+      type: string
+      example: "550e8400-e29b-41d4-a716-446655440000"
+    name:
+      type: string
+      example: John Doe
+    email:
+      type: string
+      example: johndoe@email.com
+    role:
+      type: string
+      example: user
+
+RefreshTokenResponsePayload:
+  type: object
+  required:
+    - accessToken
+    - refreshToken
+  properties:
+    accessToken:
+      type: string
+      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+    refreshToken:
+      type: string
+      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+
+
+

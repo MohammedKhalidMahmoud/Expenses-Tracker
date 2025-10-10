@@ -3,8 +3,8 @@ import { DataTypes } from 'sequelize';
 
 const Category = sequelize.define('Category', {
     id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
         primaryKey: true,
         allowNull: false,
     },
@@ -23,8 +23,12 @@ const Category = sequelize.define('Category', {
         defaultValue: 'global',
     },
     userId: {
-        type: DataTypes.UUID,
+        type: DataTypes.INTEGER,
         allowNull: true,
+        reference: {
+            model: 'User', // name of Target model
+            key: 'id' // key in Target model that we're referencing
+        }
     },
 }, {
     timestamps: true,
